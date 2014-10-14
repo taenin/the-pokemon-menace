@@ -1,0 +1,38 @@
+room.id: current room object
+room.chooseMove("MOVE STRING")
+room.chooseSwitch(index of pokemon in party)
+
+To get information for your team:
+room.request.side.pokemon
+
+or to get current moves:
+room.request.active[0].moves
+
+
+
+
+
+
+Learning types and weakness / good matchups (ex. fire vs ice)
+-------------------------------------------------------------------------------------
+
+We have a total of 6 pokemon (both sides use the same pokemon teams, same sets of moves for each pokemon)
+
+Several Hard-coded bots (strategies we think are decent + just moving randomly)
+
+
+Implement using a priority queue (to account for knocked-out pokemon)
+
+1 Learning bot (tic-tac-toe style of adding beads)--Mini games? each game for when a pokemon gets knocked out
+		Length of minigames (if you win but it takes a long time, add very few beads
+							if you lose but it takes a long time, remove few beads)
+		Weight game on change of pokemon HP (that is, the record all pokemon HP at start of minigame,
+		Record change of HP of the pokemon who gets knocked out to end the minigame)
+Can't add beads until the battle is over.
+Look at performance based on weightings
+
+
+Add switch clause: can't switch more than X times in a row (ensures a deterministic battles)
+  
+
+
