@@ -1,0 +1,12 @@
+{
+  "manifest_version": 2,
+
+  "name": "Pokemon",
+  "description": "This extension demonstrates a browser action with kittens.",
+  "version": "1.0",
+  "content_scripts":[{
+    "matches":["http://play.pokemonshowdown.com/*"],
+    "js" : ["contentscript.js"]
+    }],
+    "web_accessible_resources": ["script.js"]
+}
