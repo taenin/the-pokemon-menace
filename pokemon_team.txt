@@ -1,0 +1,110 @@
+Blastoise
+Ability: Torrent
+EVs: 252 HP / 4 Atk / 252 SpA
+Mild Nature
+- Scald
+- Body Slam
+- Focus Blast
+- Hidden Power [Fire]
+
+Sceptile
+Ability: Overgrow
+EVs: 252 Atk / 4 SpA / 252 Spe
+Hasty Nature
+- Leaf Blade
+- Hidden Power [Water]
+- Pursuit
+- Drain Punch
+
+Absol
+Ability: Super Luck
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Flamethrower
+- Dark Pulse
+- Thunder
+- Ice Beam
+
+Machamp
+Ability: Guts
+EVs: 252 HP / 252 Atk / 4 SpD
+Adamant Nature
+- Wake-Up Slap
+- Headbutt
+- Thunder Punch
+- Fire Punch
+
+Alakazam
+Ability: Inner Focus
+EVs: 4 HP / 252 SpA / 252 Spe
+Timid Nature
+- Psychic
+- Focus Blast
+- Energy Ball
+- Psyshock
+
+Typhlosion
+Ability: Blaze
+EVs: 4 HP / 252 SpA / 252 Spe
+Timid Nature
+- Flamethrower
+- Heat Wave
+- Hidden Power [Electric]
+- Extrasensory
+
+-------------------------
+Blastoise
+Ability: Torrent
+EVs: 252 HP / 4 Atk / 252 SpA
+Mild Nature
+- Scald
+- Body Slam
+- Focus Blast
+- Hidden Power [Fire]
+
+Sceptile
+Ability: Overgrow
+EVs: 252 Atk / 4 SpA / 252 Spe
+Hasty Nature
+- Leaf Blade
+- Hidden Power [Water]
+- Pursuit
+- Drain Punch
+
+Aggron
+Ability: Sturdy
+EVs: 252 HP / 16 Def / 240 SpD
+Impish Nature
+- Iron Head
+- Heavy Slam
+- Earthquake
+- Ice Punch
+
+Machamp
+Ability: Guts
+EVs: 252 HP / 252 Atk / 4 SpD
+Adamant Nature
+- Wake-Up Slap
+- Headbutt
+- Thunder Punch
+- Fire Punch
+
+Mandibuzz (F)
+Ability: Big Pecks
+Happiness: 0
+EVs: 248 HP / 136 Def / 108 SpD / 16 Spe
+Bold Nature
+- Aerial Ace
+- Heat Wave
+- Foul Play
+- Frustration
+
+Typhlosion
+Ability: Blaze
+EVs: 4 HP / 252 SpA / 252 Spe
+Timid Nature
+- Flamethrower
+- Heat Wave
+- Hidden Power [Electric]
+- Extrasensory
+
