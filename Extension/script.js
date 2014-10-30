@@ -13,6 +13,10 @@ var bot = createBot("taenin", 0, false, false);
             }
             else{
                 //match was accepted, currently in a game
+                if(!bot.isThinking){
+                    bot.isThinking = true;
+                    bot.handleBattle(txt);
+                }
             }
         }
         //Very important here to log the information given
@@ -46,6 +50,46 @@ function createBot(targetOpponent, gamesToPlay, willStartGames, active){
     bot.willStartGames = willStartGames;
     bot.opponent = targetOpponent;
     bot.inGame = false;
+    bot.gameState = null;
+    bot.isThinking = false;
+    bot.availableMoves = [];
+    //Format of this.availableMoves: An array of arrays
+    //Every sub array is of this form: [BoxName, argument to function, string of function to make move]
+    //Where BoxName is the string "key" of the current "MENACE Match Box" to be used
+
+    bot.getState = function(msg){
+        if(msg.search("|teampreview") > -1){
+            this.gameState = "TEAM_PREVIEW";
+            return this.gameState;
+        }
+        return "UNKNOWN_STATE";
+    };
+
+    bot.getValidMoves = function(){
+        switch(this.gameState){
+            case "TEAM_PREVIEW":
+                this.availableMoves = [];
+                for(var index = 0; index <room.request.side.pokemon.length; index++){
+                    var pkmn = room.request.side.pokemon[index];
+                    var commaIndex = pkmn.details.search(",") > -1 ? pkmn.details.search(",") : pkmn.details.length;
+                    this.availableMoves.push([pkmn.details.slice(0, commaIndex), index, "TEAM_PREVIEW"]);
+                }
+                break;
+
+            case "SWITCH_FAINT":
+                this.availableMoves = [];
+                break;
+
+            case "NORMAL_TURN":
+                this.availableMoves = [];
+                break;
+
+            default:
+                this.availableMoves = [];
+                break;
+        }
+    };
+
     bot.handleWaiting = function(msg){
         if(this.willStartGames && this.gamesToPlay > 0){
             this.gamesToPlay -= 1;
@@ -62,6 +106,46 @@ function createBot(targetOpponent, gamesToPlay, willStartGames, active){
                 setTimeout(acceptBattle(this.opponent, this.team), 1000);
             }
         }
+    };
+    bot.makeMove = function(moveArray){
+        switch(moveArray[2]){
+            case "TEAM_PREVIEW":
+                room.chooseTeamPreview(moveArray[1]);
+                this.isThinking = false;
+                this.gameState = "NORMAL_TURN";
+                break;
+            case "MOVE":
+                room.chooseMove(moveArray[1]);
+                this.isThinking = false;
+                this.gameState = "NORMAL_TURN";
+                break;
+            case "SWITCH":
+                room.chooseSwitch(moveArray[1]);
+                this.isThinking = false;
+                this.gameState = "NORMAL_TURN";
+                break;
+            default:
+                break;
+        }
+    };
+    bot.handleBattle = function(msg){
+        if((room && room.request && room.request.side && room.request.side.pokemon)){
+            //we probably want to wait for room.choice to become defined--how though?
+            if(this.getState(msg) === "TEAM_PREVIEW"){
+                setTimeout(function(){
+                    bot.getValidMoves();
+                    bot.makeMove(bot.availableMoves[Math.floor(Math.random() * bot.availableMoves.length)]);
+                }, 1000);
+            }
+        }
+        else{
+            this.isThinking = false;
+        }
+
+    };
+
+    bot.makeRandomMove = function(msg){
+
     };
 
     return bot;
