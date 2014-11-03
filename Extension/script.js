@@ -58,8 +58,24 @@ function createBot(targetOpponent, gamesToPlay, willStartGames, active){
     //Where BoxName is the string "key" of the current "MENACE Match Box" to be used
 
     bot.getState = function(msg){
-        if(msg.search("|teampreview") > -1){
+        if(msg.indexOf("|win|" + this.opponent) > -1){
+            this.gameState = "MATCH_LOSS";
+            return this.gameState;
+        }
+        if(msg.indexOf("|win|")>-1){
+            this.gameState = "MATCH_WIN";
+            return this.gameState;
+        }
+        if(msg.indexOf("|teampreview") > -1){
             this.gameState = "TEAM_PREVIEW";
+            return this.gameState;
+        }
+        if((msg.indexOf("|p1") > -1 || msg.indexOf("|p2") > -1) && msg.indexOf("|turn|") >-1 && msg.indexOf("faint") === -1){
+            this.gameState = "NORMAL_TURN";
+            return this.gameState;
+        }
+        if((msg.indexOf("|p1") > -1 || msg.indexOf("|p2") > -1) && msg.indexOf("|faint|" + room.side) > -1){
+            this.gameState = "SWITCH_FAINT";
             return this.gameState;
         }
         return "UNKNOWN_STATE";
@@ -71,17 +87,38 @@ function createBot(targetOpponent, gamesToPlay, willStartGames, active){
                 this.availableMoves = [];
                 for(var index = 0; index <room.request.side.pokemon.length; index++){
                     var pkmn = room.request.side.pokemon[index];
-                    var commaIndex = pkmn.details.search(",") > -1 ? pkmn.details.search(",") : pkmn.details.length;
+                    var commaIndex = pkmn.details.indexOf(",") > -1 ? pkmn.details.indexOf(",") : pkmn.details.length;
                     this.availableMoves.push([pkmn.details.slice(0, commaIndex), index, "TEAM_PREVIEW"]);
                 }
                 break;
 
             case "SWITCH_FAINT":
                 this.availableMoves = [];
+                for(var index = 0; index <room.request.side.pokemon.length; index++){
+                    if(room.request.side.pokemon[index].condition != "0 fnt"){
+                        var pkmn = room.request.side.pokemon[index];
+                        var commaIndex = pkmn.details.indexOf(",") > -1 ? pkmn.details.indexOf(",") : pkmn.details.length;
+                        this.availableMoves.push([pkmn.details.slice(0, commaIndex), index, "SWITCH"]);
+                    }
+                }
                 break;
 
             case "NORMAL_TURN":
                 this.availableMoves = [];
+                for(var index = 0; index <room.request.side.pokemon.length; index++){
+                    if(room.request.side.pokemon[index].condition != "0 fnt" && !room.request.side.pokemon[index].active){
+                        var pkmn = room.request.side.pokemon[index];
+                        var commaIndex = pkmn.details.indexOf(",") > -1 ? pkmn.details.indexOf(",") : pkmn.details.length;
+                        this.availableMoves.push([pkmn.details.slice(0, commaIndex), index, "SWITCH"]);
+                    }
+                }
+                for(var index = 0; index < room.request.active[0].moves.length; index++){
+                    move = room.request.active[0].moves[index];
+                    if(!move.disabled){
+                        this.availableMoves.push([move.move, move.move, "MOVE"]);
+                    }
+                }
+
                 break;
 
             default:
@@ -99,7 +136,7 @@ function createBot(targetOpponent, gamesToPlay, willStartGames, active){
             
         }
         else if(!this.willStartGames && this.gamesToPlay > 0){
-            if(msg.search(bot.opponent) > -1 && msg.search("updatechallenges") > -1){
+            if(msg.indexOf(bot.opponent.toLowerCase()) > -1 && msg.indexOf("updatechallenges") > -1){
                 this.inGame = true;
                 this.gamesToPlay -=1;
                 //wait for variables to become defined, then accept invitation
@@ -110,19 +147,20 @@ function createBot(targetOpponent, gamesToPlay, willStartGames, active){
     bot.makeMove = function(moveArray){
         switch(moveArray[2]){
             case "TEAM_PREVIEW":
-                room.chooseTeamPreview(moveArray[1]);
                 this.isThinking = false;
-                this.gameState = "NORMAL_TURN";
+                room.chooseTeamPreview(moveArray[1]);
+                
+                //this.gameState = "NORMAL_TURN";
                 break;
             case "MOVE":
-                room.chooseMove(moveArray[1]);
                 this.isThinking = false;
-                this.gameState = "NORMAL_TURN";
+                room.chooseMove(moveArray[1]);
+                //this.gameState = "NORMAL_TURN";
                 break;
             case "SWITCH":
-                room.chooseSwitch(moveArray[1]);
                 this.isThinking = false;
-                this.gameState = "NORMAL_TURN";
+                room.chooseSwitch(moveArray[1]);
+                //this.gameState = "NORMAL_TURN";
                 break;
             default:
                 break;
@@ -131,11 +169,27 @@ function createBot(targetOpponent, gamesToPlay, willStartGames, active){
     bot.handleBattle = function(msg){
         if((room && room.request && room.request.side && room.request.side.pokemon)){
             //we probably want to wait for room.choice to become defined--how though?
-            if(this.getState(msg) === "TEAM_PREVIEW"){
-                setTimeout(function(){
+            if(this.getState(msg)=== "TEAM_PREVIEW"){
+                handlePreview();
+                /*setTimeout(function(){
                     bot.getValidMoves();
                     bot.makeMove(bot.availableMoves[Math.floor(Math.random() * bot.availableMoves.length)]);
-                }, 1000);
+                }, 1000); */
+            }
+            else if(this.getState(msg) === "NORMAL_TURN"){
+                handleNormalTurn();
+            }
+            else if(this.getState(msg) === "SWITCH_FAINT"){
+                handleSwitchFaint();
+            }
+            else if(this.getState(msg) === "MATCH_WIN"){
+                handleEndGame();
+            }
+            else if(this.getState(msg) === "MATCH_LOSS"){
+                handleEndGame();
+            }
+            else{
+                this.isThinking = false;
             }
         }
         else{
@@ -149,6 +203,45 @@ function createBot(targetOpponent, gamesToPlay, willStartGames, active){
     };
 
     return bot;
+}
+
+function handlePreview(){
+    if(room.choice && room.choice.teamPreview){
+        bot.getValidMoves();
+        bot.makeMove(bot.availableMoves[Math.floor(Math.random() * bot.availableMoves.length)]);
+    }
+    else{
+        setTimeout(handlePreview, 1000);
+    }
+}
+
+function handleEndGame(){
+    setTimeout(function(){
+        room.close();
+        bot.inGame = false;
+        bot.isThinking = false;
+        console.log("Start Next Game");
+    }, 2000);
+}
+
+function handleNormalTurn(){
+    if(room.choice && room.choice.switchFlags && room.choice.choices && room.choice.switchOutFlags){
+        bot.getValidMoves();
+        bot.makeMove(bot.availableMoves[Math.floor(Math.random() * bot.availableMoves.length)]);
+    }
+    else{
+        setTimeout(handleNormalTurn, 1000);
+    }
+}
+
+function handleSwitchFaint(){
+    if(room.choice && room.choice.canSwitch){
+        bot.getValidMoves();
+        bot.makeMove(bot.availableMoves[Math.floor(Math.random() * bot.availableMoves.length)]);
+    }
+    else{
+        setTimeout(handleSwitchFaint, 1000);
+    }
 }
 
 /**playerName is a String representing the name of the target player
@@ -176,4 +269,8 @@ function findTeam(){
         }
     }
     return {};
+}
+
+function getEnemyActivePokemon(){
+    return room.battle.yourSide.active[0].baseSpecies;
 }
