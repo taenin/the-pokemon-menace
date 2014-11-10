@@ -97,7 +97,7 @@ Bold Nature
 - Aerial Ace
 - Heat Wave
 - Foul Play
-- Frustration
+- Facade
 
 Typhlosion
 Ability: Blaze
