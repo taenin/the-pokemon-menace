@@ -53,23 +53,6 @@ Timid Nature
 - Extrasensory
 
 -------------------------
-Blastoise
-Ability: Torrent
-EVs: 252 HP / 4 Atk / 252 SpA
-Mild Nature
-- Scald
-- Body Slam
-- Focus Blast
-- Hidden Power [Fire]
-
-Sceptile
-Ability: Overgrow
-EVs: 252 Atk / 4 SpA / 252 Spe
-Hasty Nature
-- Leaf Blade
-- Hidden Power [Water]
-- Pursuit
-- Drain Punch
 
 Aggron
 Ability: Sturdy
@@ -79,6 +62,15 @@ Impish Nature
 - Heavy Slam
 - Earthquake
 - Ice Punch
+
+Blastoise
+Ability: Torrent
+EVs: 252 HP / 4 Atk / 252 SpA
+Mild Nature
+- Scald
+- Body Slam
+- Focus Blast
+- Hidden Power [Fire]
 
 Machamp
 Ability: Guts
@@ -98,6 +90,15 @@ Bold Nature
 - Heat Wave
 - Foul Play
 - Facade
+
+Sceptile
+Ability: Overgrow
+EVs: 252 Atk / 4 SpA / 252 Spe
+Hasty Nature
+- Leaf Blade
+- Hidden Power [Water]
+- Pursuit
+- Drain Punch
 
 Typhlosion
 Ability: Blaze
