@@ -582,3 +582,103 @@ function findTeam(){
 function getEnemyActivePokemon(){
     return room.battle.yourSide.active[0].baseSpecies;
 }
+
+//-------------------------------------------------------------------------------------
+/** MENACE implementation */
+//Object to be stringified for each of 216 possibilities as keys to Associative array
+// currentPoke and opponentPoke are strings and teammates is an array of strings
+var State = function (currentPoke, teammates, opponentPoke) {
+  this.currentPoke = currentPoke;
+  this.teammates = teammates;
+  this.opponentPoke = opponentPoke;
+};
+
+
+// Names for this may be changed so that when creating a State to find the matchbox,
+// data from page may be easily used
+var pokes = [
+    "aggron", "blastoise", "machamp", 
+    "mandibuzz", "sceptile", "typhlosion"
+];
+
+
+// powerset is used to get the permutations of team members left
+function powerset (array_to_make, result) {
+    if (array_to_make.length == 1) { return array_to_make.pop; }
+    else{
+      p = array_to_make.pop;
+      val added = result.forEach(function(el) {el.push p});
+      val newR = [result, [p], added];
+      return [newR, powerset(array_to_make, newR)];
+    }
+}
+
+
+/** create MatchBoxValueArray takes the teamSet array of Strings for a certain state
+*and returns an array of the following: sw means switchWith
+* [moveOption1, moveOption2, moveOption3, moveOption4,
+* sw aggron, sw blastoise, sw machamp, sw mandibuzz, sw sceptile, sw typhlosion]
+*/
+function createMatchBoxValueArray (teamSet, startBeadNbr) {
+   var boxArray = [startBeadNbr, startBeadNbr, startBeadNbr, startBeadNbr, 0, 0, 0, 0, 0, 0];
+   teamSet.iter(function(teamPoke){
+      switch (teamPoke) {
+        case "aggron": boxArray[5] = startBeadNbr;
+            break;
+        case "blastoise": boxArray[6] = startBeadNbr;
+            break;
+        case "machamp": boxArray[7] = startBeadNbr;
+            break;
+        case "mandibuzz": boxArray[8] = startBeadNbr;
+            break;
+        case "sceptile": boxArray[9] = startBeadNbr;
+            break;
+        default: boxArray[10] = startBeadNbr;
+      }
+   });
+ return boxArray;
+}
+
+
+function createMatchBoxes (matchBoxes, pointsPerBox){
+  var powerSetTeams = powerset(pokes);
+  //create each matchbox
+    pokes.forEach(function(currentPoke) {
+        pokes.forEach(function(opponentPoke) {
+           powerSetTeams.forEach(function(teammates){
+             var matchBoxKey = JSON.stringify( State(currentPoke,teammates,opponentPoke) );
+             var matchBoxValue = createMatchBoxValueArray(teammates, pointsPerBox);
+             matchBoxes[matchBoxKey] = matchBoxValue;
+           });
+        });
+    });
+}
+
+
+//Associative array of matchBoxes, int is starting beads per box
+var MatchBoxes = createMatchBoxes({}, 30);
+
+//NOT SURE IF I NEED TO PASS MATCHBOXES TO THIS??
+//Takes State object of current state
+//Currently returns index of desired move in MatchBoxValArray
+function getRandomMove (state) {
+    var matchKey = JSON.stringify(state);
+    var valArray = matchBoxes[matchKey];
+    var arrayWithIndicies = valArray.entries();
+    var randomChoiceArray = [];
+    arrayWithIndicies.iter(function(index, nbrBeads)
+        while (nbrBeads > 0){
+            randomChoiceArray.push(index);
+            nbrBeads-1;
+        }
+    )};
+    var choice = Math.floor(Math.random() * (randomChoiceArray.length));
+    return randomChoiceArray[choice];
+}
+
+
+//state is the state to be updated, moveIndex according to MatchBoxValArray
+// and pointsToAdd can be negative.
+function updateState (state, moveIndex, pointsToAdd){
+}
+
