@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "Pokemon",
-  "description": "This extension demonstrates a browser action with kittens.",
+  "description": "An AI bot for Pokemon Showdown",
   "version": "1.0",
   "content_scripts":[{
     "matches":["http://play.pokemonshowdown.com/*"],
