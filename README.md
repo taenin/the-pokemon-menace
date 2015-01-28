@@ -6,5 +6,5 @@ The Pokémon Menace utilizes a modified implementation of [Donald Michie's](http
 
 ###Setup
 - Clone the repo or download the Extension folder
-- Using Google Chrome, navigate to your [extensions page](chrome://extensions/). Enable developer mode, load an unpacked extension (select the "Extension" folder you previously downloaded), and disable developer mode.
+- Using Google Chrome, navigate to your extensions page: `chrome://extensions/`. Enable developer mode, load an unpacked extension (select the "Extension" folder you previously downloaded), and disable developer mode.
 
