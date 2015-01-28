@@ -38,5 +38,6 @@ Note that any log commands in the console after the bot is created will result i
 
 ###Extracting the Bot's Knowledge Base
 You can extract the knowledge base from an existing MENACE bot by simply entering the following command:  
+
 	> extractedMenace = bot.menace  
 This will return the bot's knowledge base (not a copy!).
