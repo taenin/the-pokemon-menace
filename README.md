@@ -6,7 +6,8 @@ The Pokémon Menace utilizes a modified implementation of [Donald Michie's](http
 
 ##Setup
 1. Clone the repo or download the Extension folder
-2. Using Google Chrome, navigate to your extensions page: `chrome://extensions/`. Enable developer mode, load an unpacked extension (select the "Extension" folder you previously downloaded), and disable developer mode.
+2. Using Google Chrome, navigate to your extensions page: `chrome://extensions/`.  
+ Enable developer mode, load an unpacked extension (select the "Extension" folder you previously downloaded), and disable developer mode.
 
 ##Using the Extension
 To use the extension, open [Pokémon Showdown](http://pokemonshowdown.com/) and select "Play Online".
@@ -21,13 +22,13 @@ For the bot to function correctly, you must create a Pokémon team with the name
 Two of the teams I used in my preliminary experiments are included in pokemon_team.txt
 
 ###Creating a Bot
-To create a bot, open the Chrome console and type:
+To create a bot, open the Chrome console and type:  
 
 	> bot = createMenaceBot(foo)
-The same syntax is used if you want to create a strategy bot:
+The same syntax is used if you want to create a strategy bot:  
 	> bot = createStrategyBot(foo)
-or create a bot with learning disabled using another bot's knowledge base:
+or create a bot with learning disabled using another bot's knowledge base:  
 	> bot = createPlayTestBot(foo)
-If you create a bot that will start games, you must manually start the first game by logging information in the console.
+If you create a bot that will start games, you must manually start the first game by logging information in the console.  
 	> console.log('foo')
 Note that any log commands in the console after the bot is created will result in the bot attempting to start its first game.
