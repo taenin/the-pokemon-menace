@@ -26,9 +26,12 @@ To create a bot, open the Chrome console and type:
 
 	> bot = createMenaceBot(foo)
 The same syntax is used if you want to create a strategy bot:  
+
 	> bot = createStrategyBot(foo)
 or create a bot with learning disabled using another bot's knowledge base:  
+
 	> bot = createPlayTestBot(foo)
 If you create a bot that will start games, you must manually start the first game by logging information in the console.  
+
 	> console.log('foo')
 Note that any log commands in the console after the bot is created will result in the bot attempting to start its first game.
