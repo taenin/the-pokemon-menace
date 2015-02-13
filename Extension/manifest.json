@@ -5,7 +5,7 @@
   "description": "An AI bot for Pokemon Showdown",
   "version": "1.0",
   "content_scripts":[{
-    "matches":["http://play.pokemonshowdown.com/*"],
+    "matches":["http://play.pokemonshowdown.com/*", "http://127.0.0.1.psim.us/*"],
     "js" : ["contentscript.js"]
     }],
     "web_accessible_resources": ["script.js"]
