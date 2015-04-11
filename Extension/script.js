@@ -233,14 +233,26 @@ function createMenaceBot(targetOpponent, gamesToPlay, willStartGames, active, tu
                         this.availableMoves.push([[situationKey,pkmnKey], index, "SWITCH"]);
                     }
                 }
+
+
                 for(var index = 0; index < room.request.active[0].moves.length; index++){
+                    move = room.request.active[0].moves[index].move.toLowerCase().replace(/ /g, "").replace(/-/g, "");
+                    moveKey = "MOVE " + move;
+                    if(!room.request.active[0].moves[index].disabled){
+                        this.availableMoves.push([[situationKey,moveKey],
+                            {"getAttribute": function(d){return this[d]}, "data-move": move, "pos": index+1},
+                            "MOVE"]);
+                    }
+                }
+
+                /*for(var index = 0; index < room.request.active[0].moves.length; index++){
                     move = room.request.active[0].moves[index];
                     moveKey = "MOVE " + move.move.toLowerCase().replace(/ /g, "").replace(/-/g, "");
                     this.checkCreateMenaceMove(situationKey, moveKey);
                     if(!move.disabled){
                         this.availableMoves.push([[situationKey,moveKey], move.move.toLowerCase().replace(/ /g, "").replace(/-/g, ""), "MOVE"]);
                     }
-                }
+                }*/
 
                 break;
 
@@ -294,7 +306,7 @@ function createMenaceBot(targetOpponent, gamesToPlay, willStartGames, active, tu
             case "MOVE":
                 this.isThinking = false;
                 this.movesMade.push(moveArray[0]);
-                room.chooseMove(moveArray[1]);
+                room.chooseMove(moveArray[1].pos, moveArray[1]);
                 //this.gameState = "NORMAL_TURN";
                 break;
             case "SWITCH":
@@ -467,10 +479,16 @@ function createStrategyBot(targetOpponent, gamesToPlay, willStartGames, active){
                         this.availableMoves.push([pkmn.details.slice(0, commaIndex), index, "SWITCH"]);
                     }
                 }
+
+
+
+
                 for(var index = 0; index < room.request.active[0].moves.length; index++){
                     move = room.request.active[0].moves[index].move.toLowerCase().replace(/ /g, "").replace(/-/g, "");
-                    if(!move.disabled){
-                        this.availableMoves.push([move, move, "MOVE"]);
+                    if(!room.request.active[0].moves[index].disabled){
+                        this.availableMoves.push([pkmn.details.slice(0, commaIndex),
+                            {"getAttribute": function(d){return this[d]}, "data-move": move, "pos": index+1},
+                            "MOVE"]);
                     }
                 }
 
@@ -509,7 +527,7 @@ function createStrategyBot(targetOpponent, gamesToPlay, willStartGames, active){
                 break;
             case "MOVE":
                 this.isThinking = false;
-                room.chooseMove(moveArray[1]);
+                room.chooseMove(moveArray[1].pos, moveArray[1]);
                 //this.gameState = "NORMAL_TURN";
                 break;
             case "SWITCH":
@@ -641,18 +659,18 @@ function createStrategyBot(targetOpponent, gamesToPlay, willStartGames, active){
             //if we have a good matchup, stay in and fight
             //Sort our available moves to prioritize hitting the target
             bot.availableMoves.sort(function(a, b){
-                if(typeof(a[1]) ==="string" && typeof(b[1])==="string"){
-                    admg = bot.calcMoveDmg(a[1]);
-                    bdmg = bot.calcMoveDmg(b[1]);
+                if(typeof(a[1]) ==="object" && typeof(b[1])==="object"){
+                    admg = bot.calcMoveDmg(a[1]['data-move']);
+                    bdmg = bot.calcMoveDmg(b[1]['data-move']);
                     if(admg === bdmg){
                         return 0;
                     }
                     return admg > bdmg ? -1 : 1;
                 }
-                else if(typeof(a[1])==="string" && typeof(b[1])!="string"){
+                else if(typeof(a[1])==="object" && typeof(b[1])!="object"){
                     return -1;
                 }
-                else if(typeof(a[1])!="string" && typeof(b[1])==="string"){
+                else if(typeof(a[1])!="object" && typeof(b[1])==="object"){
                     return 1;
                 }
                 return 0;
@@ -896,6 +914,18 @@ function createPlayTestBot(targetOpponent, gamesToPlay, willStartGames, active, 
                         this.availableMoves.push([[situationKey,pkmnKey], index, "SWITCH"]);
                     }
                 }
+
+                for(var index = 0; index < room.request.active[0].moves.length; index++){
+                    move = room.request.active[0].moves[index].move.toLowerCase().replace(/ /g, "").replace(/-/g, "");
+                    moveKey = "MOVE " + move;
+                    if(!room.request.active[0].moves[index].disabled){
+                        this.availableMoves.push([[situationKey,moveKey],
+                            {"getAttribute": function(d){return this[d]}, "data-move": move, "pos": index+1},
+                            "MOVE"]);
+                    }
+                }
+
+                /*
                 for(var index = 0; index < room.request.active[0].moves.length; index++){
                     move = room.request.active[0].moves[index];
                     moveKey = "MOVE " + move.move.toLowerCase().replace(/ /g, "").replace(/-/g, "");
@@ -903,7 +933,7 @@ function createPlayTestBot(targetOpponent, gamesToPlay, willStartGames, active, 
                     if(!move.disabled){
                         this.availableMoves.push([[situationKey,moveKey], move.move.toLowerCase().replace(/ /g, "").replace(/-/g, ""), "MOVE"]);
                     }
-                }
+                }*/
 
                 break;
 
@@ -957,7 +987,7 @@ function createPlayTestBot(targetOpponent, gamesToPlay, willStartGames, active, 
             case "MOVE":
                 this.isThinking = false;
                 this.movesMade.push(moveArray[0]);
-                room.chooseMove(moveArray[1]);
+                room.chooseMove(moveArray[1].pos, moveArray[1]);
                 //this.gameState = "NORMAL_TURN";
                 break;
             case "SWITCH":
