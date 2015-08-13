@@ -238,6 +238,7 @@ function createMenaceBot(targetOpponent, gamesToPlay, willStartGames, active, tu
                 for(var index = 0; index < room.request.active[0].moves.length; index++){
                     move = room.request.active[0].moves[index].move.toLowerCase().replace(/ /g, "").replace(/-/g, "");
                     moveKey = "MOVE " + move;
+                    this.checkCreateMenaceMove(situationKey, moveKey);
                     if(!room.request.active[0].moves[index].disabled){
                         this.availableMoves.push([[situationKey,moveKey],
                             {"getAttribute": function(d){return this[d]}, "data-move": move, "pos": index+1},
@@ -486,6 +487,7 @@ function createStrategyBot(targetOpponent, gamesToPlay, willStartGames, active){
                 for(var index = 0; index < room.request.active[0].moves.length; index++){
                     move = room.request.active[0].moves[index].move.toLowerCase().replace(/ /g, "").replace(/-/g, "");
                     if(!room.request.active[0].moves[index].disabled){
+                        var pkmn = room.request.side.pokemon[0];
                         this.availableMoves.push([pkmn.details.slice(0, commaIndex),
                             {"getAttribute": function(d){return this[d]}, "data-move": move, "pos": index+1},
                             "MOVE"]);
@@ -575,7 +577,7 @@ function createStrategyBot(targetOpponent, gamesToPlay, willStartGames, active){
     };
 
     bot.isNotBadMatchup= function(){
-        var myTypes = room.battle.mySide.pokemon[0].types;
+        var myTypes = room.battle.mySide.active[0].types;
         var oppTypes = room.battle.yourSide.active[0].types;
         dmg = 1.0;
         numPokemonRemaining=0;
@@ -636,16 +638,20 @@ function createStrategyBot(targetOpponent, gamesToPlay, willStartGames, active){
         }
     };
     bot.calcMoveDmg = function(moveID){
-        var myTypes = room.battle.mySide.pokemon[0].types;
+        var myTypes = room.battle.mySide.active[0].types;
         var oppTypes = room.battle.yourSide.active[0].types;
         var moveType = BattleMovedex[moveID].type;
         var basedmg = BattleMovedex[moveID].basePower;
+        var myPoke = room.battle.mySide.active[0];
+        var yourPoke = room.battle.yourSide.active[0];
+        myPoke.getWeight = function(){return myPoke.weightkg;};
+        yourPoke.getWeight= function(){return yourPoke.weightkg;};
         if(BattleMovedex[moveID].basePowerCallback){
             if(BattleMovedex[moveID].basePowerCallback.length ===1){
-                basedmg = BattleMovedex[moveID].basePowerCallback(room.battle.mySide.pokemon[0]);
+                basedmg = BattleMovedex[moveID].basePowerCallback();
             }
             else if(BattleMovedex[moveID].basePowerCallback.length ===2){
-                basedmg = BattleMovedex[moveID].basePowerCallback(room.battle.mySide.pokemon[0], room.battle.yourSide.active[0]);
+                basedmg = BattleMovedex[moveID].basePowerCallback(room.battle.mySide.active[0], room.battle.yourSide.active[0]);
             }
         }
         var stabBonus = myTypes.indexOf(moveType) > -1;
@@ -1036,7 +1042,7 @@ function createPlayTestBot(targetOpponent, gamesToPlay, willStartGames, active, 
     };
 
     bot.isNotBadMatchup= function(){
-        var myTypes = room.battle.mySide.pokemon[0].types;
+        var myTypes = room.battle.mySide.active[0].types;
         var oppTypes = room.battle.yourSide.active[0].types;
         dmg = 1.0;
         numPokemonRemaining=0;
@@ -1097,16 +1103,16 @@ function createPlayTestBot(targetOpponent, gamesToPlay, willStartGames, active, 
         }
     };
     bot.calcMoveDmg = function(moveID){
-        var myTypes = room.battle.mySide.pokemon[0].types;
+        var myTypes = room.battle.mySide.active[0].types;
         var oppTypes = room.battle.yourSide.active[0].types;
         var moveType = BattleMovedex[moveID].type;
         var basedmg = BattleMovedex[moveID].basePower;
         if(BattleMovedex[moveID].basePowerCallback){
             if(BattleMovedex[moveID].basePowerCallback.length ===1){
-                basedmg = BattleMovedex[moveID].basePowerCallback(room.battle.mySide.pokemon[0]);
+                basedmg = BattleMovedex[moveID].basePowerCallback(room.battle.mySide.active[0]);
             }
             else if(BattleMovedex[moveID].basePowerCallback.length ===2){
-                basedmg = BattleMovedex[moveID].basePowerCallback(room.battle.mySide.pokemon[0], room.battle.yourSide.active[0]);
+                basedmg = BattleMovedex[moveID].basePowerCallback(room.battle.mySide.active[0], room.battle.yourSide.active[0]);
             }
         }
         var stabBonus = myTypes.indexOf(moveType) > -1;
@@ -1242,7 +1248,7 @@ function handleSwitchFaint(){
 function requestBattle(playerName, team){
     room.challenge(playerName, "ou", team);
     app.sendTeam(team);
-    app.send("/challenge " + playerName + ", ou");
+    room.makeChallenge(this, ".pm-window-" + toId(playerName));
 }
 
 /**opponent is a String representing the name of the target opponent
@@ -1258,7 +1264,7 @@ function acceptBattle(opponent, team){
 function findTeam(){
     for(var teamIndex=0; teamIndex < Storage.teams.length; teamIndex++){
         if(Storage.teams[teamIndex].name === "MENACE"){
-            return Storage.teams[teamIndex].team;
+            return Storage.teams[teamIndex];
         }
     }
     return {};

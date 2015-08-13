@@ -1,0 +1,56 @@
+
+Aggron
+Ability: Sturdy
+EVs: 252 HP / 16 Def / 240 SpD
+Impish Nature
+- Iron Head
+- Heavy Slam
+- Earthquake
+- Ice Punch
+
+Blastoise
+Ability: Torrent
+EVs: 252 HP / 4 Atk / 252 SpA
+Mild Nature
+- Scald
+- Body Slam
+- Focus Blast
+- Hidden Power [Fire]
+
+Machamp
+Ability: Guts
+EVs: 252 HP / 252 Atk / 4 SpD
+Adamant Nature
+- Wake-Up Slap
+- Headbutt
+- Thunder Punch
+- Fire Punch
+
+Mandibuzz (F)
+Ability: Big Pecks
+Happiness: 0
+EVs: 248 HP / 136 Def / 108 SpD / 16 Spe
+Bold Nature
+- Aerial Ace
+- Heat Wave
+- Foul Play
+- Facade
+
+Sceptile
+Ability: Overgrow
+EVs: 252 Atk / 4 SpA / 252 Spe
+Hasty Nature
+- Leaf Blade
+- Hidden Power [Water]
+- Pursuit
+- Drain Punch
+
+Typhlosion
+Ability: Blaze
+EVs: 4 HP / 252 SpA / 252 Spe
+Timid Nature
+- Flamethrower
+- Heat Wave
+- Hidden Power [Electric]
+- Extrasensory
+
